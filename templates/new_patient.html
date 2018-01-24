@@ -56,12 +56,13 @@
 										</div>
 										<div class="form-group insurance" hidden>
 										<div class="row">
-												<select name="prescribed" id='psd' class="selectpicker" data-width="100%" multiple data-live-search="true" title="Select Prescription">
-														{% for drug in drugs %}
-														<option data-subtext=" - {{ drug.units_in_stock }} Units Available"> {{ drug }} </option>
+												<select name="insurances"  class="selectpicker" data-width="100%" multiple data-live-search="true" title="Select Insurance Company">
+														{% for company in companies %}
+														<option data-subtext="{{ company }}"> {{ company }} </option>
 														{% endfor %}
 												</select>
 										</div>
+										<hr>
 										<div class="form-group has-success has-feedback" id="insurance">
 												<label class="control-label">Insurance Number</label>
 												<div>
@@ -94,7 +95,8 @@
 	{% endblock %}
 	{% block javascript %}
 		{% include 'base_js.html' %}
-	
+		<script src="{% static 'dashboard/assets/plugins/form/bootstrap-select/js/bootstrap-select.min.js' %}"></script>
+		
 				<script>
 						$('input[name=checkinsurance]').click(function () {
 							if ($(this).is(":checked")) {
