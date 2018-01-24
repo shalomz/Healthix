@@ -1,0 +1,142 @@
+{% extends 'base.html' %} {% block body %} {% block page-loader %} {% endblock %} {% block container %} {% block navbar%}
+{% include 'navbar.html' %} {% endblock %} {% block sidebar%} {% include 'sidebar.html' %} {% endblock %}
+{% block content %}
+<div class="content">
+<br>
+<br>
+<br>
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand">
+                <i class="fa fa-expand"></i>
+            </a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload">
+                <i class="fa fa-repeat"></i>
+            </a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse">
+                <i class="fa fa-minus"></i>
+            </a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+        <h4 class="panel-title">All Patients, Searchable by any field</h4>
+    </div>
+    <div class="panel-body">
+            <table id="staff_table" class="table table-bordered table-striped table-sm table-responsive table-condensed table-hover" cellspacing="0"
+            width="100%">
+            <thead>
+                <tr>
+
+                    <th>Patient ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Surname</th>
+                    <th>Date of Birth</th>
+                    <th>Insurance Number</th>
+                 
+                    <th>Actions</th>
+
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+
+                    <th>Patient ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Surname</th>
+                    <th>Date of Birth</th>
+                    <th>Insurance Number</th>
+                 
+                    <th>Actions</th>
+
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+</div>
+{% endblock %}
+            {% endblock %} {% block javascript %} 
+
+
+            {% include 'base_js.html' %}
+           
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            //Initializing the datatable for rendering (For the Staff User)
+                            // This table contains the buttons for rendering the Export Buttons
+                            var staff_table = $('#staff_table').DataTable({
+                                "dom": "<'row'<'toolbar'><'col-sm-3'l><'col-sm-6 text-center'B><'col-sm-3'f>>" +
+                                "<'row'<'col-sm-12'tr>>" +
+                                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                "bPaginate": true,
+                                "processing": true,   //Allowing for action from the server
+                                ajax: {
+                
+                                    //This is the API endpoint for the JSON data to be rendered by the table
+                                    "url": "{% url 'patients_api' %}",
+                                    "dataSrc": ''
+                                },
+                                //Rendering the columns with values from the backend URL (http://127.0.0.1:8000/api/customers/?format=json)
+                                "columns": [
+                
+                                    {
+                                        "data": "fields.patient_code"
+                                    },
+                                    {
+                                        "data": "fields.first_name"
+                                    },
+                                    {
+                                        "data": "fields.last_name"
+                                    },
+                                    {
+                                        "data": "fields.middle_name"
+                                    },
+                                    {
+                                        "data": "fields.dob"
+                                    },
+                                    {
+                                        "data": "fields.insurance_number"
+                                    },
+                                
+                                    
+                                    {
+                
+                                        "data": null,
+                                        "sortable": false,
+                                        "render": function (data, type, fields) {
+                                            return '<a class="btn btn-info btn-sm" href=/diagnosis/' + data.fields.patient_code + '>' + 'Treat / View' + '</a>';
+                                        }
+                                    }
+                                ],
+                
+                                buttons: ['copyHtml5', 'excelHtml5', 'pdfHtml5', 'csvHtml5', 'print'],
+                
+                                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+                
+                            });
+                
+                            
+                            // Function to allow highlighting of Matching tables
+                            staff_table.on('draw', function () {
+                                var body = $(staff_table.table().body());
+                                body.unhighlight();
+                                body.highlight(staff_table.search());
+                            });
+                
+                
+                            $("div.toolbar").html('<p class="text-center"><b>Healthix - Patients</b></p><hr>');
+                
+                            //Function to reload the table. User paging is not reset on reload
+                            setInterval(function () {
+                                staff_table.ajax.reload(null, false);
+                            }, 30000);  //Reload times can be adjusted by changing the value 
+                
+                        });
+                    </script>
+         
+                
+            {% endblock %} {% endblock%}

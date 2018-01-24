@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static crispy_forms_tags %}
+
+{% block body %}
+<body>
+	{% block page-loader%}
+	<!-- begin #page-loader -->
+	<div id="page-loader" class="fade in"><span class="spinner"></span></div>
+	<!-- end #page-loader -->
+	{% endblock %}
+	{% block container %}
+	<!-- begin #page-container -->
+	<div id="page-container" class="page-container fade page-sidebar-fixed page-header-fixed">
+        {% block navbar %}
+		<!-- begin #header -->
+			{% include 'navbar.html' %}
+        <!-- end #header -->
+        {% endblock %}
+		{% block sidebar %}
+        <!-- begin #sidebar -->
+			{% include 'sidebar.html' %}
+        <!-- end #sidebar -->
+        {% endblock %}
+		
+		{% block content %}
+		<!-- begin #content -->
+		<div id="content" class="content">
+			<!-- begin breadcrumb -->
+			<ol class="breadcrumb pull-right">
+				<li><a href="/">Home</a></li>
+				<li><a href="javascript:;">Register New Patient</a></li>
+				
+			</ol>
+			<!-- end breadcrumb -->
+			<!-- begin page-header -->
+			<h1 class="page-header">Register New Client<small> Fill in the Details in the respective fields</small></h1>
+			<!-- end page-header -->
+			
+			<div class="row">
+			    <div class="col-md-12">
+                    
+					<div class="row">
+						<div class="form-group">
+							<form method="POST" name="register_form" enctype="multipart/form-data">
+					
+								{{ form | crispy }}
+								
+									<hr>
+								<div class="form-group">
+										<label class="control-label">Insurance Details</label>
+										<div class="checkbox">
+												<label class="control-label">
+													<input type="checkbox" name='checkinsurance'/>
+													Check if the Patient holds an agreement with an Insurance Company
+												</label>
+										</div>
+										<div class="form-group insurance" hidden>
+										<div class="row">
+												<select name="prescribed" id='psd' class="selectpicker" data-width="100%" multiple data-live-search="true" title="Select Prescription">
+														{% for drug in drugs %}
+														<option data-subtext=" - {{ drug.units_in_stock }} Units Available"> {{ drug }} </option>
+														{% endfor %}
+												</select>
+										</div>
+										<div class="form-group has-success has-feedback" id="insurance">
+												<label class="control-label">Insurance Number</label>
+												<div>
+													<input type="text" name="insurance_number"class="form-control" />
+													<span class="fa fa-check form-control-feedback"></span>
+												</div>
+											</div>
+										</div>
+								</div>
+								
+								{% csrf_token %}
+								
+								<button type="submit" class="btn btn-primary btn-block">Save Patient Details</button>
+								
+							</form>
+						</div>
+					</div>
+			    </div>
+			</div>
+		</div>
+		<!-- end #content -->
+		{% endblock %}
+      
+		
+		<!-- begin scroll to top btn -->
+		<a href="javascript:;" class="btn btn-icon btn-circle btn-primary btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+		<!-- end scroll to top btn -->
+	</div>
+	<!-- end page container -->
+	{% endblock %}
+	{% block javascript %}
+		{% include 'base_js.html' %}
+	
+				<script>
+						$('input[name=checkinsurance]').click(function () {
+							if ($(this).is(":checked")) {
+								$('.insurance').show();
+							} else {
+								$('.insurance').hide();
+							}
+						});
+					</script>
+		
+{% endblock %}
+
+{% endblock %}
+

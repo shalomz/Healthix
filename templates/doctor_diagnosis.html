@@ -1,0 +1,307 @@
+
+{% load static crispy_forms_tags %} _
+<!-- ================== BEGIN BASE CSS STYLE ================== -->
+
+<link href="{% static 'assets/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/ionicons/css/ionicons.min.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/css/animate.min.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/css/style.min.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/css/style-responsive.min.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/css/theme/default.css' %}" rel="stylesheet" id="theme" />
+<!-- ================== END BASE CSS STYLE ================== -->
+
+<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link href="{% static 'assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/bootstrap-wysihtml5/dist/bootstrap3-wysihtml5.min.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/bootstrap-select/bootstrap-select.min.css' %}" rel="stylesheet" />
+
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+
+<!-- ================== BEGIN BASE JS ================== -->
+<script src="{% static 'assets/plugins/pace/pace.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery/jquery-1.9.1.min.js' %}"></script>
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<!-- ================== END BASE JS ================== -->
+
+
+<body>
+	<!-- begin #page-loader -->
+	<div id="page-loader" class="fade in">
+		<span class="spinner"></span>
+	</div>
+	<!-- end #page-loader -->
+
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+		<!-- begin #header -->
+		{% include 'navbar.html' %}
+	<!-- end #header -->
+
+	<!-- begin #sidebar -->
+	{% include 'sidebar.html' %}
+	<!-- end #sidebar -->
+
+	<!-- begin #content -->
+	<div id="content" class="content">
+		<!-- begin breadcrumb -->
+		<ol class="breadcrumb pull-right">
+			<li>
+				<a href="javascript:;">Home</a>
+			</li>
+			<li>
+				<a href="javascript:;">Form Stuff</a>
+			</li>
+			<li class="active">Wizards</li>
+		</ol>
+		<!-- end breadcrumb -->
+		<!-- begin page-header -->
+		<h1 class="page-header">Treatment
+			<small>Diagnoses, Lab Tests, Results, History</small>
+		</h1>
+		<!-- end page-header -->
+
+		<!-- begin row -->
+		<div class="row">
+			<!-- begin col-12 -->
+			<div class="col-md-12">
+				<!-- begin panel -->
+				<div class="panel panel-inverse">
+					<div class="panel-heading">
+						<div class="panel-heading-btn">
+							<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand">
+								<i class="fa fa-expand"></i>
+							</a>
+							<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload">
+								<i class="fa fa-repeat"></i>
+							</a>
+							<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse">
+								<i class="fa fa-minus"></i>
+							</a>
+							<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove">
+								<i class="fa fa-times"></i>
+							</a>
+						</div>
+						<h4 class="panel-title">Doctor's</h4>
+					</div>
+					<div class="panel-body">
+						<form method="POST" data-parsley-validate="true" name="form-wizard">{% csrf_token %}
+							<div id="wizard">
+								<ol>
+									<li>
+										General Info
+										<small>Tab for General information</small>
+									</li>
+									<li>
+										Possible Diagnosis
+										<small>Doctor declares possible diagnosis</small>
+									</li>
+									<li>
+										Tests
+										<small>Doctor should prescribe the lab test(s)</small>
+									</li>
+									<li>
+										Results
+										<small>Results streaming in from the various labs.</small>
+									</li>
+									<li>
+										History
+										<small>Previous Medical History of Patient.</small>
+									</li>
+								</ol>
+								<!-- begin wizard step-1 -->
+								<div class="wizard-step-1">
+									<fieldset>
+										<legend class="pull-left width-full">General Visit Info</legend>
+										<!-- begin row -->
+										<div class="row">
+											<!-- begin col-4 -->
+											<div class="col-md-4">
+												<div class="form-group">
+													<label>First Name</label>
+													<input type="text" name="firstname" value="{{ patient.first_name }}" class="form-control" data-parsley-group="wizard-step-1" disabled/>
+												</div>
+											</div>
+											<!-- end col-4 -->
+											<!-- begin col-4 -->
+											<div class="col-md-4">
+												<div class="form-group">
+													<label>Middle Initial</label>
+													<input type="text" name="middle" value="{{ patient.middle_name }}" class="form-control" disabled>
+												</div>
+											</div>
+											<!-- end col-4 -->
+											<!-- begin col-4 -->
+											<div class="col-md-4">
+												<div class="form-group">
+													<label>Last Name</label>
+													<input type="text" name="lastname" value="{{ patient.last_name }}" class="form-control"  disabled/>
+												</div>
+											</div>
+											<!-- end col-4 -->
+										</div>
+										<!-- end row -->
+										<!-- begin row -->
+										<div class="row">
+											<label>Visit Type </label> {{ diagnosis_form.visit_type  }}
+										</div>
+										<!-- end row -->
+									</fieldset>
+								</div>
+								<!-- end wizard step-1 -->
+								<!-- begin wizard step-2 -->
+								<div class="wizard-step-2">
+									<fieldset>
+										<legend class="pull-left width-full">Diagnosis and Treatment</legend>
+
+										<div class="panel-body">
+											
+												<textarea class="textarea form-control" name="possible_diagnosis"  placeholder="Enter text..." rows="12"  required>
+												</textarea>
+												<hr>
+											
+										
+										</div>
+									</fieldset>
+								</div>
+								<!-- end wizard step-2 -->
+								<!-- begin wizard step-3 -->
+								<div>
+									<fieldset>
+										<legend class="pull-left width-full">Prescribe Test(s)</legend>
+										<!-- begin row -->
+										<div class="form-group">
+												{{ lab_form_set.management_form | crispy }} {% for trans_form in lab_form_set %}
+												<div class="form-group link-formset">
+													{{ trans_form }}
+												</div>
+												{% endfor %}
+										</div>
+										<!-- end row -->
+										<input type="submit" class="btn btn-success btn-block"/>
+									</fieldset>
+								</div>
+								<!-- end wizard step-3 -->
+								<!-- begin wizard step-4 -->
+								<div>
+									<div>
+										<h1>Results</h1>
+									</div>
+									<hr>
+									<div id="results">
+
+										</div>
+								</div>
+								<!-- end wizard step-4 -->
+								<!-- begin wizard step-5 -->
+								<div>
+									<div>
+										<h1>History</h1>
+										
+									</div>
+									<div id="histories">
+										
+									</div>
+								</div>
+								<!-- end wizard step-5 -->
+							</div>
+						</form>
+					</div>
+				</div>
+				<!-- end panel -->
+			</div>
+			<!-- end col-12 -->
+		</div>
+		<!-- end row -->
+	</div>
+	<!-- end #content -->
+
+
+
+	<!-- begin scroll to top btn -->
+	<a href="javascript:;" class="btn btn-icon btn-circle btn-primary btn-scroll-to-top fade" data-click="scroll-top">
+		<i class="fa fa-angle-up"></i>
+	</a>
+	<!-- end scroll to top btn -->
+	</div>
+	<!-- end page container -->
+
+	<!-- ================== BEGIN BASE JS ================== -->
+	
+	<script src="{% static 'assets/plugins/jquery/jquery-migrate-1.1.0.min.js' %}"></script>
+	<script src="{% static 'assets/plugins/jquery-ui/ui/minified/jquery-ui.min.js' %}"></script>
+	<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+	<!--[if lt IE 9]>
+		<script src="assets/crossbrowserjs/html5shiv.js"></script>
+		<script src="assets/crossbrowserjs/respond.min.js"></script>
+		<script src="assets/crossbrowserjs/excanvas.min.js"></script>
+	<![endif]-->
+	<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+	<script src="{% static 'assets/plugins/jquery-cookie/jquery.cookie.js' %}"></script>
+	<!-- ================== END BASE JS ================== -->
+
+	<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+	<script src="{% static 'assets/plugins/parsley/dist/parsley.js' %}"></script>
+	<script src="{% static 'assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+	<script src="{% static 'assets/js/form-wizards.demo.min.js' %}"></script>
+	<script src="{% static 'assets/plugins/bootstrap-wysihtml5/dist/bootstrap3-wysihtml5.all.min.js' %}"></script>
+	<script src="{% static 'assets/plugins/bootstrap-select/bootstrap-select.min.js' %}"></script>
+	<script src="{% static 'assets/js/form-wysiwyg.demo.min.js' %}"></script>
+	<script src="{% static 'assets/js/form-wizards-validation.demo.min.js' %}"></script>
+	<script src="{% static 'js/typeahead.bundle.js' %}"></script>
+	<script src="{% static 'assets/js/apps.min.js' %}"></script>
+
+	<!-- ================== END PAGE LEVEL JS ================== -->
+	<script>
+			$(document).ready(function () {
+				setInterval(function () {
+					$('#results').load("{% url 'results' patient.patient_code %}")
+				}, 300)
+			})
+		</script>
+		<script>
+				$(document).ready(function () {
+					setInterval(function () {
+						$('#histories').load("{% url 'diagnosis_histories' patient.patient_code %}")
+					}, 300)
+				})
+			</script>
+	<script>
+		$(document).ready(function () {
+			
+			$('body').on('focus', ".selective-picker", function(){
+				$(this).addClass("selectpicker");
+			});
+		})
+	</script>
+	
+	<script>
+		$('input').addClass('form-control');
+		$('input[name=payment_option]').removeClass('form-control');
+		$('select').addClass('form-control');
+
+	</script>
+		
+	<script>
+		$(document).ready(function () {
+			App.init();
+			FormWysihtml5.init();
+			FormWizardValidation.init();
+		});
+	</script>
+	<script>
+		$('#par').parsley();
+	  </script>
+	  <script>
+			$('.link-formset').formset({
+				addText: '<button class="btn btn-success">Add More</button><hr>',
+				removeText: '<button class="btn btn-danger">Remove Row </button>',
+				prefix: 'past_admissions'
+			});
+		</script>
+	
+</body>
+
+</html>
